@@ -60,7 +60,7 @@ class MeetimeApi(object):
     def __setUrl(self, start=0):
         self.url = f"{HOST}{STAGE}/leads?limit={ITEMS_BY_REQUEST}&" \
             f"start={start}&" \
-            f"lead_created_after=2022-01-01&" \
+            f"lead_created_after={self.dtTodayD1}&" \
             f"lead_created_before={self.dtToday}&" \
             f"lead_updated_after={self.dtTodayD1}&" \
             f"lead_updated_before={self.dtToday}&" \
