@@ -5,43 +5,13 @@ import datetime as date
 
 from objects.lead import Lead
 
-try:
-    HOST = sys.argv[3] # "https://api.meetime.com.br"
-except Exception as err:
-    raise SystemExit("Exception: sys.argv[3]=<host> is required. Message: " + str(err.args[0]))
-
-try:
-    STAGE = sys.argv[4] # "/v2"
-except Exception as err:
-    raise SystemExit("Exception: sys.argv[4]=<stage> is required. Message: " + str(err.args[0]))
-
-try:
-    TOKEN = sys.argv[5] # "<TOKEN_AUTHORIZATION>"
-except Exception as err:
-    raise SystemExit("Exception: sys.argv[5]=<token> is required. Message: " + str(err.args[0]))
-
-try:
-    DATE_FORMAT = sys.argv[6] # "%Y-%m-%d"
-except Exception as err:
-    raise SystemExit("Exception: sys.argv[6]=<date_format_%Y-%m-%d> is required. Message: " + str(err.args[0]))
-
-try:
-    ITEMS_BY_REQUEST = sys.argv[7] # 100
-except Exception as err:
-    raise SystemExit("Exception: sys.argv[7]=<items_by_request> is required. Message: " + str(err.args[0]))
-
-try:
-    SHOW_DELETED = sys.argv[8] # "false"
-except Exception as err:
-    raise SystemExit("Exception: sys.argv[8]=<show_deleted> is required. Message: " + str(err.args[0]))
-
 class MeetimeApi(object):
 
     @property
     def headers(self):
         return {
             'Accept': 'application/json',
-            'Authorization': TOKEN
+            'Authorization': self.token
         }
     
     @property
@@ -53,18 +23,33 @@ class MeetimeApi(object):
         self.__url = value
         
     def __init__(self):
-        self.dtToday = date.datetime.today().strftime(DATE_FORMAT)
-        self.dtTodayD1 = (date.datetime.today() - date.timedelta(days=1)).strftime(DATE_FORMAT)
+        try:
+            self.host = sys.argv[3] # "https://api.meetime.com.br"
+            self.stage = sys.argv[4] # "/v2"
+            self.token = sys.argv[5] # "<TOKEN_AUTHORIZATION>"
+            self.date_format = sys.argv[6] # "%Y-%m-%d"
+            self.items_by_request = sys.argv[7] # 100
+            self.show_deleted = sys.argv[8] # "false"
+        except Exception as err:
+            raise SystemExit("Exception: Any those sys.argv[]=[host, stage, token, date_format, items_by_request, show_deleted] is required.")
+
+        try:
+            self.show_deleted = sys.argv[8] # "false"
+        except Exception as err:
+            raise SystemExit("Exception: sys.argv[8]=<show_deleted> is required. Message: " + str(err.args[0]))
+
+        self.dtToday = date.datetime.today().strftime(self.date_format)
+        self.dtTodayD1 = (date.datetime.today() - date.timedelta(days=1)).strftime(self.date_format)
         self.__setUrl(0)
 
     def __setUrl(self, start=0):
-        self.url = f"{HOST}{STAGE}/leads?limit={ITEMS_BY_REQUEST}&" \
+        self.url = f"{self.host}{self.stage}/leads?limit={self.items_by_request}&" \
             f"start={start}&" \
             f"lead_created_after={self.dtTodayD1}&" \
             f"lead_created_before={self.dtToday}&" \
             f"lead_updated_after={self.dtTodayD1}&" \
             f"lead_updated_before={self.dtToday}&" \
-            f"show_deleted={SHOW_DELETED}"
+            f"show_deleted={self.show_deleted}"
 
     def buscarLead_D1(self):
         arrayLeads = []
