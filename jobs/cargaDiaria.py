@@ -12,4 +12,4 @@ if __name__ == '__main__':
 
     # TODO: Salvar registros da base
     
-    print(json.dumps(data))
+    print(json.dumps(data, indent=4))
