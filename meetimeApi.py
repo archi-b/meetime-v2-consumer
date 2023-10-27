@@ -6,34 +6,34 @@ import datetime as date
 from objects.lead import Lead
 
 try:
-    HOST = sys.argv[1] # "https://api.meetime.com.br"
+    HOST = sys.argv[3] # "https://api.meetime.com.br"
 except Exception as err:
-    raise SystemExit("Exception: sys.argv[1]=<host> is required. Message: " + str(err.args[0]))
+    raise SystemExit("Exception: sys.argv[3]=<host> is required. Message: " + str(err.args[0]))
 
 try:
-    STAGE = sys.argv[2] # "/v2"
+    STAGE = sys.argv[4] # "/v2"
 except Exception as err:
-    raise SystemExit("Exception: sys.argv[2]=<stage> is required. Message: " + str(err.args[0]))
+    raise SystemExit("Exception: sys.argv[4]=<stage> is required. Message: " + str(err.args[0]))
 
 try:
-    TOKEN = sys.argv[3] # "<TOKEN_AUTHORIZATION>"
+    TOKEN = sys.argv[5] # "<TOKEN_AUTHORIZATION>"
 except Exception as err:
-    raise SystemExit("Exception: sys.argv[3]=<token> is required. Message: " + str(err.args[0]))
+    raise SystemExit("Exception: sys.argv[5]=<token> is required. Message: " + str(err.args[0]))
 
 try:
-    DATE_FORMAT = sys.argv[4] # "%Y-%m-%d"
+    DATE_FORMAT = sys.argv[6] # "%Y-%m-%d"
 except Exception as err:
-    raise SystemExit("Exception: sys.argv[4]=<date_format> is required. Message: " + str(err.args[0]))
+    raise SystemExit("Exception: sys.argv[6]=<date_format_%Y-%m-%d> is required. Message: " + str(err.args[0]))
 
 try:
-    ITEMS_BY_REQUEST = sys.argv[5] # 100
+    ITEMS_BY_REQUEST = sys.argv[7] # 100
 except Exception as err:
-    raise SystemExit("Exception: sys.argv[5]=<items_by_request> is required. Message: " + str(err.args[0]))
+    raise SystemExit("Exception: sys.argv[7]=<items_by_request> is required. Message: " + str(err.args[0]))
 
 try:
-    SHOW_DELETED = sys.argv[6] # "false"
+    SHOW_DELETED = sys.argv[8] # "false"
 except Exception as err:
-    raise SystemExit("Exception: sys.argv[6]=<show_deleted> is required. Message: " + str(err.args[0]))
+    raise SystemExit("Exception: sys.argv[8]=<show_deleted> is required. Message: " + str(err.args[0]))
 
 class MeetimeApi(object):
 
