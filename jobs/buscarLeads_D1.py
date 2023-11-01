@@ -13,7 +13,7 @@ from apis.activitiesApi import ActivitiesApi
 if __name__ == '__main__':
     
     print("Loading Leads...")
-    leads = LeadsApi().buscarLeads_ById(3105692) # (3105692)Prospection.status = "LOST", (11809204)Prospection.status = "WON"
+    leads = LeadsApi().buscarLeads_D1() # (3105692)Prospection.status = "LOST", (11809204)Prospection.status = "WON"
     print("...OK!")
 
     for lead in leads:
