@@ -1,12 +1,6 @@
-import sys, os
-import requests
-import json
-
-# Necessario referenciar a pasta pai "(../)" para buscar a api da Meetime (linha 13)
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
 from apis.baseApi import BaseApi
-from objects.cadence import Cadence
+from apis.objects.cadence import Cadence
 
 class CadencesApi(BaseApi):
 

@@ -5,37 +5,11 @@ import os.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
 import json
-from apis.leadsApi import LeadsApi
-from apis.prospectionsApi import ProspectionsApi
-from apis.cadencesApi import CadencesApi
-from apis.activitiesApi import ActivitiesApi
+from business.historyLeadsBusiness import HistoryLeadsBusiness
 
 if __name__ == '__main__':
     
-    print("Loading Leads...")
-    leads = LeadsApi().buscarLeads_D1() # (3105692)Prospection.status = "LOST", (11809204)Prospection.status = "WON"
-    print("...OK!")
-
-    for lead in leads:
-        print("Aggregated Prospections ByLeadId = ", lead['id'], "...")
-
-        prospections = ProspectionsApi().buscarProspections_ByLeadId(lead["id"])
-        lead["prospections"] = prospections
-        print("...OK!")
-
-        print("Loading Prospections ByLeadId = ", lead['id'], "...")
-        activities =  ActivitiesApi().buscarActivities_ByLeadId(lead["id"])    
-        lead["activities"] = activities
-        print("...OK!")
-
-        # Aggregated Cadences by Prospections["cadence_id"]
-        for prospection in prospections:
-            print("Aggregated Cadences by Prospections['cadence_id'] = ", prospection["cadence_id"], "...")
-            cadences = CadencesApi().buscarCadences_ById(prospection["cadence_id"])
-            prospection["cadences"] = cadences
-            print("...OK!")
-
-    # TODO: Salvar registros da base
+    leads = HistoryLeadsBusiness().buscarLeadsDiario() # (3105692)Prospection.status = "LOST", (11809204)Prospection.status = "WON"
     
     for lead in leads:
         activities = lead["activities"]

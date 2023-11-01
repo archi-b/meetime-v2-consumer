@@ -1,3 +1,11 @@
 
-A pasta "/jobs" são exemplos para consulta de busca a serem feitas no Databricks.
-Use-a para consultar as classes python nas construções dos workspaces e workflows.
+## A pasta "/jobs" são exemplos para consulta de busca a serem feitas no Databricks.
+## Use-a para consultar as classes python nas construções dos workspaces e workflows.
+
+## LeadsApi necessita dos seguintes argumentos
+# self.host = sys.argv[3] # "https://api.meetime.com.br"
+# self.stage = sys.argv[4] # "/v2"
+# self.token = sys.argv[5] # "<TOKEN_AUTHORIZATION>"
+# self.date_format = sys.argv[6] # "%Y-%m-%d", formatacao do tipo Datetime
+# self.items_by_request = sys.argv[7] # 100, quantidade de itens da paginacao
+# self.show_deleted = sys.argv[8] # "false", se a busca deve trazer itens excluidos
