@@ -9,33 +9,27 @@ from apis.baseApi import BaseApi
 from objects.lead import Lead
 
 class LeadsApi(BaseApi):
+
+    @property
+    def __api(self):
+        return "/leads"
         
     def buscarLeads_D1(self):
-        # Init object
-        if (hasattr(self, "url") == False):
-            self.__result = []
-            self.__url = f"{self.host}{self.stage}/leads?limit={self.items_by_request}&" \
-                f"start=0&" \
-                f"lead_created_after=2023-10-24&" \
-                f"lead_created_before=2023-10-25&" \
-                f"lead_updated_after=2023-10-24&" \
-                f"lead_updated_before=2023-10-25&" \
-                f"show_deleted={self.show_deleted}"
-
-        response = requests.request("GET", self.__url, headers=self.headers, data={})
-
-        data = lambda:None
-        data.__dict__ = json.loads(response.text)
-
-        if (hasattr(data, "size") is False):
-            data.size = 0
-        obj = Lead(data.limit, data.start, data.size, data.next, data.data, data.parameters)
+        params = []
+        params.append(["limit", self.items_by_request])
+        params.append(["start", "0"]) 
+        params.append(["lead_created_after", self.dtTodayD1])
+        params.append(["lead_created_before", self.dtToday])
+        params.append(["lead_updated_after", self.dtTodayD1])
+        params.append(["lead_updated_before", self.dtToday])
+        params.append(["show_deleted", self.show_deleted])
         
-        self.__result.extend(obj.data)
+        self.__result = self.RequestApi(Lead, self.__api, params)
+        return self.__result
+        
+    def buscarLeads_ById(self, id):
+        params = []
+        params.append(["id", id])
 
-        # Pagination
-        while (obj.next is not None):
-            self.__url = f"{self.host}" + data.next
-            return self.buscarLeads_D1()
-
+        self.__result = self.RequestApi(Lead, self.__api, params)
         return self.__result

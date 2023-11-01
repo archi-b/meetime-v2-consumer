@@ -9,27 +9,14 @@ from apis.baseApi import BaseApi
 from objects.cadence import Cadence
 
 class CadencesApi(BaseApi):
-        
+
+    @property
+    def __api(self):
+        return "/cadences"
+    
     def buscarCadences_ById(self, id):
-        # Init object
-        if (hasattr(self, "url") == False):
-            self.__result = []
-            self.__url = f"{self.host}{self.stage}/cadences?id={id}"
+        params = []
+        params.append(["id", id])
 
-        response = requests.request("GET", self.__url, headers=self.headers, data={})
-
-        data = lambda:None
-        data.__dict__ = json.loads(response.text)
-
-        if (hasattr(data, "size") is False):
-            data.size = 0
-        obj = Cadence(data.limit, data.start, data.size, data.next, data.data, data.parameters)
-        
-        self.__result.extend(obj.data)
-
-        # Pagination
-        while (obj.next is not None):
-            self.__url = f"{self.host}" + data.next
-            return self.buscarCadences_ById(id)
-
+        self.__result = self.RequestApi(Cadence, self.__api, params)
         return self.__result

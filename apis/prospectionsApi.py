@@ -9,28 +9,14 @@ from apis.baseApi import BaseApi
 from objects.prospection import Prospection
 
 class ProspectionsApi(BaseApi):
+
+    @property
+    def __api(self):
+        return "/prospections"
         
     def buscarProspections_ByLeadId(self, lead_id):
-        # Init object
-        if (hasattr(self, "url") == False):
-            self.__result = []
-            self.__url = f"{self.host}{self.stage}/prospections?lead_id={lead_id}&" \
-                f"show_deleted={self.show_deleted}"
+        params = []
+        params.append(["lead_id", lead_id])
 
-        response = requests.request("GET", self.__url, headers=self.headers, data={})
-
-        data = lambda:None
-        data.__dict__ = json.loads(response.text)
-
-        if (hasattr(data, "size") is False):
-            data.size = 0
-        obj = Prospection(data.limit, data.start, data.size, data.next, data.data, data.parameters)
-        
-        self.__result.extend(obj.data)
-
-        # Pagination
-        while (obj.next is not None):
-            self.__url = f"{self.host}" + data.next
-            return self.buscarProspections_ByLeadId(lead_id)
-
+        self.__result = self.RequestApi(Prospection, self.__api, params)
         return self.__result

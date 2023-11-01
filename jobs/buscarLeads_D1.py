@@ -16,19 +16,16 @@ if __name__ == '__main__':
     leads = leadsApi.buscarLeads_D1()
     print("...OK!")
 
-    # Aggregated Prospections by Leads
-    prospectionsApi = ProspectionsApi()
     for lead in leads:
-        print("Loading Prospections LeadId = ", lead['id'], "...")
-        prospections = prospectionsApi.buscarProspections_ByLeadId(lead["id"])
+        print("Aggregated Prospections ByLeadId = ", lead['id'], "...")
+
+        prospections = ProspectionsApi().buscarProspections_ByLeadId(lead["id"])
         lead["prospections"] = prospections
         print("...OK!")
 
-        # Aggregated Cadences by Prospections
-        cadencesApi = CadencesApi()
         for prospection in prospections:
-            print("Loading Cadences... CadenceId = ", prospection["cadence_id"], "...")
-            cadences = cadencesApi.buscarCadences_ById(prospection["cadence_id"])
+            print("Aggregated Cadences by Prospections['cadence_id'] = ", prospection["cadence_id"], "...")
+            cadences = CadencesApi().buscarCadences_ById(prospection["cadence_id"])
             prospection["cadences"] = cadences
             print("...OK!")
 

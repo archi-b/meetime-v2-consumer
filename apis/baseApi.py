@@ -1,4 +1,6 @@
 import sys
+import requests
+import json
 import datetime as date
 
 class BaseApi(object):
@@ -36,3 +38,30 @@ class BaseApi(object):
 
         self.dtToday = date.datetime.today().strftime(self.date_format)
         self.dtTodayD1 = (date.datetime.today() - date.timedelta(days=1)).strftime(self.date_format)
+
+    def RequestApi(self, object, api, params):
+        # Init object
+        if (hasattr(self, "url") == False):
+            self.__result = []
+            self.__url = f"{self.host}{self.stage}{api}?"
+
+            for param in params:
+                self.__url += f"&{param[0]}={param[1]}"
+
+        response = requests.request("GET", self.__url, headers=self.headers, data={})
+
+        data = lambda:None
+        data.__dict__ = json.loads(response.text)
+
+        if (hasattr(data, "size") is False):
+            data.size = 0
+        obj = object(data.limit, data.start, data.size, data.next, data.data, data.parameters)
+        
+        self.__result.extend(obj.data)
+
+        # Pagination
+        while (obj.next is not None):
+            self.__url = f"{self.host}" + data.next
+            return self.buscarCadences_ById(id)
+
+        return self.__result
