@@ -20,12 +20,17 @@ class HistoryLeadsBusiness:
                 prospection["activities"] =  ActivitiesApi().getActivities_ByProspectionId(prospection["id"])
                 prospection["cadences"] = CadencesApi().getCadences_ById(prospection["cadence_id"])
         return leads
-
+    
     def convertDailyLeadsToHistory(self, leads):
 
         historyLeads = []
 
         for lead in leads:
+            prospection = lead["prospections"][0]
+            activities = prospection["activities"]
+            cadence = prospection["cadences"][0]
+            ignored_activities = self._getActivitiesByfilter(activities, ["status", "IGNORED"])
+
             historyLead = HistoryLeadsEntity()
             historyLead.id = lead["id"]
             historyLead.primeiro_nome = lead["lead_name"]
@@ -41,32 +46,35 @@ class HistoryLeadsBusiness:
             historyLead.twitter = lead["lead_twitter"]
             historyLead.facebook = lead["lead_facebook"]
             historyLead.linkedin = lead["urlLinkedin"]
-            # historyLead.cadencia = lead[""] # TODO: cadence.name|cadence.description
-            # historyLead.tipo = lead[""] # TODO: cadence.cadence_focus
-            historyLead.status = lead["prospections"][0]["status"]
-            historyLead.motivo_perda = lead["prospections"][0]["lost_reason"]
+            historyLead.cadencia = cadence["name"] + "|" + cadence["description"]
+            historyLead.tipo = cadence["cadence_focus"]
+            historyLead.status = prospection["status"]
+            historyLead.motivo_perda = prospection["lost_reason"]
             historyLead.vendedor = lead["nomeDoVendedor"]
-            # historyLead.recebido_pelo_vendedor_em = lead[""] # TODO: prospections.activities.available_from
+
+            # historyLead.recebido_pelo_vendedor_em = lead[""] # TODO: activities.available_from date.datetime.today().strftime(self.date_format)
             # historyLead.tempo_resposta_min = lead[""] # TODO: ???
             # historyLead.iniciado_em = lead[""] # TODO: ???
             # historyLead.primeira_atividade = lead[""] # TODO: ???
             # historyLead.atividades = lead[""] # TODO: ???
             # historyLead.ultima_atividade = lead[""] # TODO: ???
             # historyLead.dias_em_prospeccao = lead[""] # TODO: ???
-            historyLead.finalizado_em = lead["prospections"][0]["end_date"]
-            historyLead.origem_campanha = lead["prospections"][0]["lead_origin_campaign"]
-            historyLead.origem_fonte = lead["prospections"][0]["lead_origin_source"]
-            historyLead.origem_canal = lead["prospections"][0]["lead_origin_channel"]
-            historyLead.origem_conversao = lead["prospections"][0]["conversion"]
-            # historyLead.pesquisas = lead[""] # TODO: prospections.activities.count().filter("pesquisas")
-            # historyLead.social_points = lead[""] # TODO: prospections.activities.count().filter("social_points")
-            # historyLead.emails = lead[""] # TODO: prospections.activities.count().filter("emails")
-            # historyLead.ligacoes = lead[""] # TODO: prospections.activities.count().filter("ligacoes")
-            # historyLead.atividades_ignoradas = lead[""] # TODO: prospections.activities.count().filter("atividades_ignoradas")
-            # historyLead.pesquisas_ignoradas = lead[""] # TODO: prospections.activities.count().filter("pesquisas_ignoradas")
-            # historyLead.social_points_ignoradas = lead[""] # TODO: prospections.activities.count().filter("social_points_ignoradas")
-            # historyLead.emails_ignorados = lead[""] # TODO: prospections.activities.count().filter("emails_ignorados")
-            # historyLead.ligacoes_ignoradas = lead[""] # TODO: prospections.activities.count().filter("ligacoes_ignoradas")
+            historyLead.finalizado_em = prospection["end_date"]
+            historyLead.origem_campanha = prospection["lead_origin_campaign"]
+            historyLead.origem_fonte = prospection["lead_origin_source"]
+            historyLead.origem_canal = prospection["lead_origin_channel"]
+            historyLead.origem_conversao = prospection["conversion"]
+
+            historyLead.pesquisas = len(self._getActivitiesByfilter(activities, ["type", "SEARCH"]))
+            historyLead.social_points = len(self._getActivitiesByfilter(activities, ["type", "SOCIAL_POINTS"]))
+            historyLead.emails = len(self._getActivitiesByfilter(activities, ["type", "E_MAIL"]))
+            historyLead.ligacoes = len(self._getActivitiesByfilter(activities, ["type", "CALL"]))
+            historyLead.atividades_ignoradas = len(ignored_activities)            
+            historyLead.pesquisas_ignoradas = len(self._getActivitiesByfilter(ignored_activities, ["type", "SEARCH"]))
+            historyLead.social_points_ignoradas = len(self._getActivitiesByfilter(ignored_activities, ["type", "SOCIAL_POINTS"]))
+            historyLead.emails_ignorados = len(self._getActivitiesByfilter(ignored_activities, ["type", "E_MAIL"]))
+            historyLead.ligacoes_ignoradas = len(self._getActivitiesByfilter(ignored_activities, ["type", "CALL"]))
+            
             historyLead.cnpj = lead["cnpj"]
             historyLead.ramo_empresa = lead["ramoEmpresa"]
             historyLead.bu_do_cliente = lead["areaDoCliente"]
@@ -79,3 +87,7 @@ class HistoryLeadsBusiness:
             historyLeads.append(historyLead)
             
         return historyLeads
+    
+    def _getActivitiesByfilter(self, activities, filter):
+        result = [x for x in activities if filter[1] in x[filter[0]]]
+        return result

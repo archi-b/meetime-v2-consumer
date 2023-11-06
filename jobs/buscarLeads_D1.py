@@ -13,10 +13,10 @@ if __name__ == '__main__':
     historyLeads = HistoryLeadsBusiness().convertDailyLeadsToHistory(dailyLeads)
 
     for lead in dailyLeads:
-        activities = lead["activities"]
-        del lead["activities"]
+        activities = lead["prospections"][0]["activities"]
+        del lead["prospections"][0]["activities"]
         print(json.dumps(lead, indent=4))
-        lead["activities"] = activities
+        lead["prospections"][0]["activities"] = activities
 
         print('"activities": [')
         for activity in activities:
