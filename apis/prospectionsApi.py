@@ -1,6 +1,6 @@
 
 from apis.baseApi import BaseApi
-from apis.objects.prospection import Prospection
+from objects.prospection import Prospection
 
 class ProspectionsApi(BaseApi):
 
@@ -8,7 +8,14 @@ class ProspectionsApi(BaseApi):
     def __api(self):
         return "/prospections"
         
-    def buscarProspections_ByLeadId(self, lead_id):
+    def getProspections_ById(self, id):
+        params = []
+        params.append(["id", id])
+
+        self.__result = self.RequestApi(Prospection, self.__api, params)
+        return self.__result
+        
+    def getProspections_ByLeadId(self, lead_id):
         params = []
         params.append(["lead_id", lead_id])
 

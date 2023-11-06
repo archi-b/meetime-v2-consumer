@@ -1,4 +1,4 @@
-from apis.objects.base import Base
+from objects.base import Base
 
 class Data(object):
 

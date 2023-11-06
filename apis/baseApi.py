@@ -62,6 +62,6 @@ class BaseApi(object):
         # Pagination
         while (obj.next is not None):
             self.__url = f"{self.host}" + data.next
-            return self.buscarCadences_ById(id)
+            return self.RequestApi(object, api, params)
 
         return self.__result

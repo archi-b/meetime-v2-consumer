@@ -1,6 +1,6 @@
 
 from apis.baseApi import BaseApi
-from apis.objects.cadence import Cadence
+from objects.cadence import Cadence
 
 class CadencesApi(BaseApi):
 
@@ -8,7 +8,7 @@ class CadencesApi(BaseApi):
     def __api(self):
         return "/cadences"
     
-    def buscarCadences_ById(self, id):
+    def getCadences_ById(self, id):
         params = []
         params.append(["id", id])
 

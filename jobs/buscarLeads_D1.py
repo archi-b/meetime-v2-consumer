@@ -9,9 +9,10 @@ from business.historyLeadsBusiness import HistoryLeadsBusiness
 
 if __name__ == '__main__':
     
-    leads = HistoryLeadsBusiness().buscarLeadsDiario() # (3105692)Prospection.status = "LOST", (11809204)Prospection.status = "WON"
-    
-    for lead in leads:
+    dailyLeads = HistoryLeadsBusiness().getDailyLeads()
+    historyLeads = HistoryLeadsBusiness().convertDailyLeadsToHistory(dailyLeads)
+
+    for lead in dailyLeads:
         activities = lead["activities"]
         del lead["activities"]
         print(json.dumps(lead, indent=4))
