@@ -384,3 +384,105 @@ class HistoryLeadsEntity():
     @setor_que_atendemos.setter
     def setor_que_atendemos(self, value):
         self.__setor_que_atendemos = value
+
+    def __init__(self):
+        self.id = None
+        self.primeiro_nome = None
+        self.nome = None
+        self.email = None
+        self.empresa = None
+        self.cargo = None
+        self.telefones = None
+        self.site = None
+        self.criado_em = None
+        self.estado = None
+        self.cidade = None
+        self.twitter = None
+        self.facebook = None
+        self.linkedin = None
+        self.cadencia = None
+        self.tipo = None
+        self.status = None
+        self.motivo_perda = None
+        self.vendedor = None
+        self.recebido_pelo_vendedor_em = None
+        self.tempo_resposta_min = None
+        self.iniciado_em = None
+        self.primeira_atividade = None
+        self.atividades = None
+        self.ultima_atividade = None
+        self.dias_em_prospeccao = None
+        self.finalizado_em = None
+        self.origem_campanha = None
+        self.origem_fonte = None
+        self.origem_canal = None
+        self.origem_conversao = None
+        self.pesquisas = None
+        self.social_points = None
+        self.emails = None
+        self.ligacoes = None
+        self.atividades_ignoradas = None
+        self.pesquisas_ignoradas = None
+        self.social_points_ignoradas = None
+        self.emails_ignorados = None
+        self.ligacoes_ignoradas = None
+        self.cnpj = None
+        self.ramo_empresa = None
+        self.bu_do_cliente = None
+        self.faturamento_dolares = None
+        self.faturamento = None
+        self.qtd_funcionarios = None
+        self.cliente_gavb = None
+        self.setor_que_atendemos = None
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'primeiro_nome': self.primeiro_nome,
+            'nome': self.nome,
+            'email': self.email,
+            'empresa': self.empresa,
+            'cargo': self.cargo,
+            'telefones': self.telefones,
+            'site': self.site,
+            'criado_em': self.criado_em,
+            'estado': self.estado,
+            'cidade': self.cidade,
+            'twitter': self.twitter,
+            'facebook': self.facebook,
+            'linkedin': self.linkedin,
+            'cadencia': self.cadencia,
+            'tipo': self.tipo,
+            'status': self.status,
+            'motivo_perda': self.motivo_perda,
+            'vendedor': self.vendedor,
+            'recebido_pelo_vendedor_em': self.recebido_pelo_vendedor_em,
+            'tempo_resposta_min': self.tempo_resposta_min,
+            'iniciado_em': self.iniciado_em,
+            'primeira_atividade': self.primeira_atividade,
+            'atividades': self.atividades,
+            'ultima_atividade': self.ultima_atividade,
+            'dias_em_prospeccao': self.dias_em_prospeccao,
+            'finalizado_em': self.finalizado_em,
+            'origem_campanha': self.origem_campanha,
+            'origem_fonte': self.origem_fonte,
+            'origem_canal': self.origem_canal,
+            'origem_conversao': self.origem_conversao,
+            'pesquisas': self.pesquisas,
+            'social_points': self.social_points,
+            'emails': self.emails,
+            'ligacoes': self.ligacoes,
+            'atividades_ignoradas': self.atividades_ignoradas,
+            'pesquisas_ignoradas': self.pesquisas_ignoradas,
+            'social_points_ignoradas': self.social_points_ignoradas,
+            'emails_ignorados': self.emails_ignorados,
+            'ligacoes_ignoradas': self.ligacoes_ignoradas,
+            'cnpj': self.cnpj,
+            'ramo_empresa': self.ramo_empresa,
+            'bu_do_cliente': self.bu_do_cliente,
+            'faturamento_dolares': self.faturamento_dolares,
+            'faturamento': self.faturamento,
+            'qtd_funcionarios': self.qtd_funcionarios,
+            'cliente_gavb': self.cliente_gavb,
+            'setor_que_atendemos': self.setor_que_atendemos
+        }

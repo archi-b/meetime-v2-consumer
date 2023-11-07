@@ -9,10 +9,11 @@ from business.historyLeadsBusiness import HistoryLeadsBusiness
 
 if __name__ == '__main__':
     
-    dailyLeads = HistoryLeadsBusiness().getDailyLeads()
-    historyLeads = HistoryLeadsBusiness().convertDailyLeadsToHistory(dailyLeads)
+    leads_api = HistoryLeadsBusiness().getDailyLeads()
+    historyLeads = HistoryLeadsBusiness().convertDailyLeadsToHistory(leads_api)
 
-    for lead in dailyLeads:
+    print("----before convertion----")
+    for lead in leads_api:
         activities = lead["prospections"][0]["activities"]
         del lead["prospections"][0]["activities"]
         print(json.dumps(lead, indent=4))
@@ -22,3 +23,6 @@ if __name__ == '__main__':
         for activity in activities:
             print(json.dumps(activity, indent=4))
         print(']')
+
+    print("----after convertion----")    
+    print(json.dumps(historyLeads, indent=4, ensure_ascii=False))
