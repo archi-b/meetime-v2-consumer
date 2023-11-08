@@ -16,7 +16,7 @@ if __name__ == '__main__':
     for lead in leads_api:
         activities = lead["prospections"][0]["activities"]
         del lead["prospections"][0]["activities"]
-        print(json.dumps(lead, indent=4))
+        print(json.dumps(lead, indent=4, ensure_ascii=False))
         lead["prospections"][0]["activities"] = activities
 
         print('"activities": [')

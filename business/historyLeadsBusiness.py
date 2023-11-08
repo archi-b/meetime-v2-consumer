@@ -38,7 +38,7 @@ class HistoryLeadsBusiness:
             historyLead.email = lead["lead_email"]
             historyLead.empresa = lead["lead_company"]
             historyLead.cargo = lead["lead_position"]
-            historyLead.telefones = lead["phones"]
+            historyLead.telefones = lead["phonesString"]
             historyLead.site = lead["lead_site"]
             historyLead.criado_em = lead["lead_created_date"] # TODO: *ver formatacao
             historyLead.estado = lead["lead_state"]
