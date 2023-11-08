@@ -53,8 +53,8 @@ class HistoryLeadsBusiness:
             historyLead.vendedor = lead["nomeDoVendedor"]
 
             # historyLead.recebido_pelo_vendedor_em = lead[""] # TODO: activities.available_from date.datetime.today().strftime(self.date_format)
-            # historyLead.tempo_resposta_min = lead[""] # TODO: ???
-            # historyLead.iniciado_em = lead[""] # TODO: ???
+            historyLead.tempo_resposta_min = None # Ignored
+            historyLead.iniciado_em = prospection["begin_date"]
             # historyLead.primeira_atividade = lead[""] # TODO: ???
             # historyLead.atividades = lead[""] # TODO: ???
             # historyLead.ultima_atividade = lead[""] # TODO: ???
