@@ -1,3 +1,6 @@
+import datetime as date
+import re
+import json
 
 from apis.leadsApi import LeadsApi
 from apis.prospectionsApi import ProspectionsApi
@@ -8,23 +11,23 @@ from objects.cadence import Cadence
 from objects.prospection import Prospection
 from objects.activity import Activity
 from entities.historyLeadsEntity import HistoryLeadsEntity
-from modules.utils import Dotdict
 
 class HistoryLeadsBusiness:
 
     def getDailyLeads(self):
         leads = LeadsApi().getLeads_D1()
-        for lead in leads:
-            lead["prospections"] = ProspectionsApi().getProspections_ById(lead["current_prospection_id"])
-            for prospection in lead["prospections"]:
-                prospection["activities"] =  ActivitiesApi().getActivities_ByProspectionId(prospection["id"])
-                prospection["cadences"] = CadencesApi().getCadences_ById(prospection["cadence_id"])
+        leads = self.__aggregated_data(leads)
+        return leads
+
+    def getLeadsAll(self):
+        params = []
+        params.append(["lead_created_before", date.datetime.today().strftime("%Y-%m-%d")])
+        leads = LeadsApi().getLeads_ByQueryParams(params)
+        leads = self.__aggregated_data(leads)
         return leads
     
     def convertDailyLeadsToHistory(self, leads):
-
         historyLeads = []
-
         for lead in leads:
             prospection = lead["prospections"][0]
             activities = prospection["activities"]
@@ -91,3 +94,40 @@ class HistoryLeadsBusiness:
     def _getActivitiesByfilter(self, activities, filter):
         result = [x for x in activities if filter[1] in x[filter[0]]]
         return result
+    
+    def __aggregated_data(self, leads):
+
+        if leads == None:
+            return None
+        
+        # TODO: Quando a api /prospection aceitar array de ids.
+        #       Pode-se alterar a logica para buscar a lista de prospeccoes em uma única requisicao, para depois
+        #       realizar a juncao com seus respectivos Leads, evitando o erro HTTP 429 - Too Many Requests.
+        #       
+        #       prospections = ProspectionsApi().getProspections_ById(','.join(prospection_ids))
+        
+        prospection_ids = re.findall(r'"current_prospection_id": "(\d+)"', json.dumps(leads))
+        activities =  ActivitiesApi().getActivities_ByProspectionId(','.join(prospection_ids))
+
+        for lead in leads:
+            lead["prospections"] = ProspectionsApi().getProspections_ById(lead["current_prospection_id"])
+            for prospection in lead["prospections"]:
+                prospection["activities"] =  []
+                for activity in activities:
+                    if activity["prospection_id"] == prospection["id"]:
+                        prospection["activities"].append(activity)
+                prospection["cadences"] = CadencesApi().getCadences_ById(prospection["cadence_id"])
+
+        
+        cadence_ids = re.findall(r'"cadence_id": "(\d+)"', json.dumps(leads))
+        cadence_ids_unique = list(set(cadence_ids))
+        cadences =  CadencesApi().getCadences_ById(','.join(cadence_ids_unique))
+
+        for lead in leads:
+            for prospection in lead["prospections"]:
+                prospection["cadences"] = []
+                for cadence in cadences:
+                    if prospection["cadence_id"] == cadence["id"]:
+                        prospection["cadences"].append(cadence)
+
+        return leads

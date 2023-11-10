@@ -21,6 +21,10 @@ class LeadsApi(BaseApi):
         self.__result = self.RequestApi(Lead, self.__api, params)
         return self.__result
         
+    def getLeads_ByQueryParams(self, params):
+        self.__result = self.RequestApi(Lead, self.__api, params, False)
+        return self.__result
+        
     def getLeads_ById(self, id):
         params = []
         params.append(["id", id])
