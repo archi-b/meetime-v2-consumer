@@ -10,19 +10,22 @@ from business.historyLeadsBusiness import HistoryLeadsBusiness
 if __name__ == '__main__':
     
     leads_api = HistoryLeadsBusiness().getDailyLeads()
-    historyLeads = HistoryLeadsBusiness().convertDailyLeadsToHistory(leads_api)
+    if leads_api != None:
+        historyLeads = HistoryLeadsBusiness().convertDailyLeadsToHistory(leads_api)
 
-    print("----before convertion----")
-    for lead in leads_api:
-        activities = lead["prospections"][0]["activities"]
-        del lead["prospections"][0]["activities"]
-        print(json.dumps(lead, indent=4, ensure_ascii=False))
-        lead["prospections"][0]["activities"] = activities
+        print("----before convertion----")
+        for lead in leads_api:
+            activities = lead["prospections"][0]["activities"]
+            del lead["prospections"][0]["activities"]
+            print(json.dumps(lead, indent=4, ensure_ascii=False))
+            lead["prospections"][0]["activities"] = activities
 
-        print('"activities": [')
-        for activity in activities:
-            print(json.dumps(activity, indent=4))
-        print(']')
+            print('"activities": [')
+            for activity in activities:
+                print(json.dumps(activity, indent=4))
+            print(']')
 
-    print("----after convertion----")    
-    print(json.dumps(historyLeads, indent=4, ensure_ascii=False))
+        print("----after convertion----")    
+        print(json.dumps(historyLeads, indent=4, ensure_ascii=False))
+    else:
+        print("-----NO RECORDS-----")

@@ -2,6 +2,8 @@ import sys
 import requests
 import json
 import datetime as date
+import time
+from http import HTTPStatus
 
 class BaseApi(object):
 
@@ -28,6 +30,8 @@ class BaseApi(object):
             self.date_format = sys.argv[6] # "%Y-%m-%d"
             self.items_by_request = sys.argv[7] # 100
             self.show_deleted = sys.argv[8] # "false"
+            # self.delay_by_request_ms = sys.argv[9] # "200" in miliseconds
+            self.SLEEP_HTTP_ERROR_429_SECONDS = 10 # Default: "10" in seconds
         except Exception as err:
             raise SystemExit("Exception: Any those sys.argv[]=[host, stage, token, date_format, items_by_request, show_deleted] is required.")
 
@@ -39,7 +43,7 @@ class BaseApi(object):
         self.dtToday = date.datetime.today().strftime(self.date_format)
         self.dtTodayD1 = (date.datetime.today() - date.timedelta(days=1)).strftime(self.date_format)
 
-    def RequestApi(self, object, api, params):
+    def RequestApi(self, object, api, params, pagination_enabled = True):
         # Init object
         if (hasattr(self, "url") == False):
             self.__result = []
@@ -50,6 +54,12 @@ class BaseApi(object):
 
         response = requests.request("GET", self.__url, headers=self.headers, data={})
 
+        if response.status_code == HTTPStatus.TOO_MANY_REQUESTS:
+            time.sleep(self.SLEEP_HTTP_ERROR_429_SECONDS)
+            return self.RequestApi(object, api, params)
+        if response.status_code == HTTPStatus.INTERNAL_SERVER_ERROR:
+            return None
+
         data = lambda:None
         data.__dict__ = json.loads(response.text)
 
@@ -59,9 +69,10 @@ class BaseApi(object):
         
         self.__result.extend(obj.data)
 
-        # Pagination
-        while (obj.next is not None):
-            self.__url = f"{self.host}" + data.next
-            return self.RequestApi(object, api, params)
+        if pagination_enabled == True:
+            # Pagination
+            while (obj.next is not None):
+                self.__url = f"{self.host}" + data.next
+                return self.RequestApi(object, api, params)
 
         return self.__result
