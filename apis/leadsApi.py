@@ -12,10 +12,10 @@ class LeadsApi(BaseApi):
         params = []
         params.append(["limit", self.items_by_request])
         params.append(["start", "0"]) 
-        params.append(["lead_created_after", "2023-10-01"]) # TODO: remover
-        params.append(["lead_created_before", "2023-11-01"]) # TODO: remover
-        params.append(["lead_updated_after", "2023-10-01"]) # TODO: remover
-        params.append(["lead_updated_before", "2023-11-01"]) # TODO: remover
+        params.append(["lead_created_after", self.dtTodayD1])
+        params.append(["lead_created_before", self.dtToday])
+        params.append(["lead_updated_after", self.dtTodayD1])
+        params.append(["lead_updated_before", self.dtToday])
         params.append(["show_deleted", self.show_deleted])
         
         self.__result = self.RequestApi(Lead, self.__api, params)

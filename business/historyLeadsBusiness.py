@@ -13,7 +13,7 @@ from modules.utils import Dotdict
 class HistoryLeadsBusiness:
 
     def getDailyLeads(self):
-        leads = LeadsApi().getLeads_ById(11809204) # TODO: remover id, alterar para .getLeads_D1()
+        leads = LeadsApi().getLeads_D1()
         for lead in leads:
             lead["prospections"] = ProspectionsApi().getProspections_ById(lead["current_prospection_id"])
             for prospection in lead["prospections"]:
@@ -46,7 +46,7 @@ class HistoryLeadsBusiness:
             historyLead.twitter = lead["lead_twitter"]
             historyLead.facebook = lead["lead_facebook"]
             historyLead.linkedin = lead["urlLinkedin"]
-            historyLead.cadencia = cadence["name"] + "|" + cadence["description"]
+            historyLead.cadencia = cadence["name"] + (str("|" + cadence["description"]) if cadence["description"] is not None else '')
             historyLead.tipo = cadence["cadence_focus"]
             historyLead.status = prospection["status"]
             historyLead.motivo_perda = prospection["lost_reason"]
