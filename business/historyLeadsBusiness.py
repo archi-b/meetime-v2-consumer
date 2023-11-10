@@ -95,11 +95,22 @@ class HistoryLeadsBusiness:
         result = [x for x in activities if filter[1] in x[filter[0]]]
         return result
     
-    def __aggregated_data(self, leads):
+    def __aggregated_data(self, leads, enable_reduce_requests = False):
 
         if leads == None:
             return None
         
+        if (enable_reduce_requests == True):
+            leads = self.__reduce_requests(leads)
+        else:    
+            for lead in leads:
+                lead["prospections"] = ProspectionsApi().getProspections_ById(lead["current_prospection_id"])
+                for prospection in lead["prospections"]:
+                    prospection["activities"] =  ActivitiesApi().getActivities_ByProspectionId(prospection["id"])
+                    prospection["cadences"] = CadencesApi().getCadences_ById(prospection["cadence_id"])
+        return leads
+    
+    def __reduce_requests(self, leads):
         # TODO: Quando a api /prospection aceitar array de ids.
         #       Pode-se alterar a logica para buscar a lista de prospeccoes em uma única requisicao, para depois
         #       realizar a juncao com seus respectivos Leads, evitando o erro HTTP 429 - Too Many Requests.
@@ -116,8 +127,6 @@ class HistoryLeadsBusiness:
                 for activity in activities:
                     if activity["prospection_id"] == prospection["id"]:
                         prospection["activities"].append(activity)
-                prospection["cadences"] = CadencesApi().getCadences_ById(prospection["cadence_id"])
-
         
         cadence_ids = re.findall(r'"cadence_id": "(\d+)"', json.dumps(leads))
         cadence_ids_unique = list(set(cadence_ids))
